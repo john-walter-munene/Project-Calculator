@@ -1,0 +1,91 @@
+body{
+    box-sizing: border-box;
+    margin: 0 auto;
+    padding: 0;
+    max-width: 50%;
+    font-family: Arial, Helvetica, sans-serif;
+    border: 3px solid gainsboro;
+    border-radius: 3px;
+}
+h1{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 10px;
+    background-color: rgb(21, 20, 20);
+    margin: 0;
+    padding: 10px 0;
+    color: aliceblue;
+}
+.calculator-container{
+    display: flex;
+    flex-direction: column;
+    background-color: rgb(21, 20, 20);
+}
+.display{
+    height: 100px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-evenly;
+    align-items: center;
+    border: 2px solid gainsboro;
+}
+.operation{
+    font-size: 24px;
+    color: blueviolet;
+    font-weight: 700;
+    padding: 5px auto;
+}
+.output{
+    font-size: 50px;
+    color: azure;
+    font-weight: 900;
+}
+.operators{
+    display: flex;
+    justify-content: space-evenly;
+    height: 50px;
+    align-items: center;
+    color: antiquewhite;
+    padding: 20px 10px 10px 10px;
+}
+.operators *{
+    font-size: 24px;
+    font-weight: 700;
+    width: calc(25% - 50px);
+    height: 50px;
+    border: 1px solid rgb(31, 31, 31);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 5px;
+    border-radius: 10px;
+}
+.numbers {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-evenly;
+    padding-top: 15px;
+}
+
+.numbers button {
+    width: calc(33.33% - 50px);
+    height: 50px;
+    margin: 10px; 
+    font-weight: 700;
+    font-size: 22px;
+    border-radius: 10px;
+}
+.controller{
+    display: flex;
+    justify-content: space-evenly;
+    padding-bottom: 20px;
+}
+.controller * {
+    width: calc(25% - 50px);
+    height: 50px;
+    margin: 10px;
+    font-weight: 700;
+    font-size: 22px;
+    border-radius: 10px;
+}
