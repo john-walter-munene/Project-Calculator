@@ -82,10 +82,22 @@ h1{
     padding-bottom: 20px;
 }
 .controller * {
-    width: calc(25% - 50px);
+    width: calc(33.33% - 50px);
     height: 50px;
     margin: 10px;
     font-weight: 700;
     font-size: 22px;
+    border-radius: 10px;
+}
+.finalizer{
+    display: flex;
+    justify-content: space-evenly;
+}
+.finalizer *{
+    width: calc(50% - 60px);
+    height: 40px;
+    margin: 10px auto 15px auto;
+    font-size: 24px;
+    font-weight: 800;
     border-radius: 10px;
 }
