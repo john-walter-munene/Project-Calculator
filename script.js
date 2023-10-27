@@ -5,9 +5,9 @@ function addition(numOne, numTwo) {
 // Subtract Numbers 
 function subtraction(numOne, numTwo) {
     return numOne - numTwo;
-} 
+}
 // Multiply numbers
-function mulitply(numOne, numTwo) {
+function multiply(numOne, numTwo) {
     return numOne * numTwo;
 }
 // Divide numbers.
@@ -22,85 +22,162 @@ function divide(numOne, numTwo) {
     return (numOne / numTwo).toFixed(2);
 }
 
-let firstNumber;
-let secondNumber;
-let operatorAction;
+let firstNumber = null;
+let secondNumber = null;
+let operatorAction = null;
 
+// perform operation based on operator.
 function operate(numOne, operator, numTwo) {
-    // Perform calculations based on operator.
-    if (operator === '+') {
-        return addition(numOne, numTwo);
-    } else if (operator === '-') {
-        return subtraction(numOne, numTwo);
-    } else if (operator === '÷') {
-        return divide(numOne, numTwo);
-    } else if (operator === 'x') {
-        return mulitply(numOne, numTwo);
+    switch (operator) {
+        case "+":
+            return addition(numOne, numTwo);
+        case "-":
+            return subtraction(numOne, numTwo);
+        case "x":
+            return multiply(numOne, numTwo);
+        case "÷":
+            return divide(numOne, numTwo);
+        default:
+            throw Error("Invalid operator");
     }
 }
 
-let display;
+let display = '';
 
-const operationInPprogress = document.querySelector('.operation');
+const operationInProgress = document.querySelector('.operation');
 let calculatorOutput = document.querySelector('.output');
+let overallExpression = ''; // To store the overall expression.
 
 const numbers = document.querySelectorAll('.number');
 numbers.forEach((number) => {
     number.addEventListener('click', () => {
-        operationInPprogress.textContent += number.textContent;
-        display = operationInPprogress.textContent;
-    })
+        let newValue = number.textContent;
+        updateDisplay(newValue);
+    });
 });
 
-RegExp.escape = function (string) {
-    return string.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&');
-};
-
-let operators = document.querySelectorAll('.operator');
+const operators = document.querySelectorAll('.operator');
 operators.forEach((operator) => {
     operator.addEventListener('click', () => {
-        operatorAction = operator.textContent;
-        operationInPprogress.textContent += operatorAction;
-        display = operationInPprogress.textContent;
-    })
+        if (firstNumber === null) {
+            // If firstNumber is not set, set it and the operator.
+            firstNumber = parseFloat(display);
+            operatorAction = operator.textContent;
+            display = '';
+        } else {
+            // If firstNumber is set, this is the second number.
+            secondNumber = parseFloat(display);
+            // Perform the operation on the current pair of numbers.
+            firstNumber = operate(firstNumber, operatorAction, secondNumber);
+            operatorAction = operator.textContent;
+            display = '';
+        }
+        overallExpression += operator.textContent; // Update overall expression.
+        operationInProgress.textContent = overallExpression;
+    });
 });
 
-let equals = document.querySelector('.equalls');
+const equals = document.querySelector('.equalls');
 equals.addEventListener('click', () => {
-    let operatorsArray = ['+', '-', 'x', '÷'];
-        for (const item of operatorsArray) {
-            if (display.match(RegExp.escape(item))) {
-                let mathsArray = display.split(item);
-                operatorAction = item;
-                firstNumber = parseInt(mathsArray[0]);
-                secondNumber = parseInt(mathsArray[1]);
-            }
-        }
-    let answer = operate(firstNumber, operatorAction, secondNumber);
-    calculatorOutput.textContent = answer;
-})
+    if (firstNumber !== null && operatorAction !== null) {
+        // Perform the final operation with the second number.
+        secondNumber = parseFloat(display);
+        const result = operate(firstNumber, operatorAction, secondNumber);
+        calculatorOutput.textContent = result;
+        firstNumber = result;
+        operatorAction = null;
+        display = result.toString();
+        overallExpression = display; // Update overall expression.
+        operationInProgress.textContent = overallExpression;
+    }
+});
 
-let clearUp = document.querySelector('.clear');
+const clearUp = document.querySelector('.clear');
 clearUp.addEventListener('click', clearCalculator);
 
 function clearCalculator() {
-    operationInPprogress.textContent = '';
-    calculatorOutput.textContent = '';
+    firstNumber = null;
+    operatorAction = null;
+    secondNumber = null;
     display = '';
+    overallExpression = '';
+    operationInProgress.textContent = '';
+    calculatorOutput.textContent = '';
 }
 
-let delStuff = document.querySelector('.del');
+const delStuff = document.querySelector('.del');
 delStuff.addEventListener('click', () => {
-    display = display.slice(0, -1); 
-    operationInPprogress.textContent = operationInPprogress.textContent.slice(0, -1);
+    if (display.length > 0) {
+        display = display.slice(0, -1);
+        overallExpression = overallExpression.slice(0, -1); // Update overall expression.
+        operationInProgress.textContent = overallExpression;
+    }
 });
 
-let allButtons = document.querySelectorAll('button');
+const allButtons = document.querySelectorAll('button');
 allButtons.forEach((button) => {
     button.addEventListener('click', (event) => {
         event.target.classList.add('button-clicked');
         setTimeout(() => {
             event.target.classList.remove('button-clicked');
         }, 200);
-    })
-})
+    });
+});
+
+// Function to update the display when a number button is clicked
+function updateDisplay(newValue) {
+    if (newValue === '.' && display.includes('.')) {
+        return; 
+    }
+    // Append the new value to the display
+    display += newValue;
+    overallExpression += newValue; // Update overall expression
+    operationInProgress.textContent = overallExpression;
+}
+
+// Add hover effect on buttons.
+allButtons.forEach((button) => {
+    button.addEventListener('mouseenter', (event) => {
+        event.target.classList.add('button-hover');
+        setTimeout(() => {
+            event.target.classList.remove('button-hover');
+        }, 200);
+    });
+});
+
+// Add keyboard support.
+document.addEventListener('keydown', (event) => {
+    const key = event.key;
+    
+    // Define a function to handle the calculation and display update
+    function calculateResult() {
+        if (firstNumber !== null && operatorAction !== null) {
+            // Perform the final operation with the second number.
+            secondNumber = parseFloat(display);
+            const result = operate(firstNumber, operatorAction, secondNumber);
+            calculatorOutput.textContent = result;
+            firstNumber = result;
+            operatorAction = null;
+            display = result.toString();
+            overallExpression = display; // Update overall expression.
+            operationInProgress.textContent = overallExpression;
+        }
+    }
+
+    if (/\d/.test(key)) {
+        updateDisplay(key);
+    } else if (key === '+' || key === '-' || key === '*' || key === '/') {
+        operatorAction = key;
+        calculateResult(); 
+    } else if (key === 'Enter' || key === '=') {
+        calculateResult();
+    } else if (key === 'Escape') {
+        clearCalculator();
+    } else if (key === 'Backspace') {
+        if (display.length > 0) {
+            display = display.slice(0, -1);
+            overallExpression = overallExpression.slice(0, -1);
+            operationInProgress.textContent = overallExpression;
+        }
+    }
+});
