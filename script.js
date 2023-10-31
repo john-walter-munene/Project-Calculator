@@ -19,7 +19,7 @@ function divide(numOne, numTwo) {
         return;
     }
     // Return division at 2 decimal places.
-    return (numOne / numTwo).toFixed(2);
+    return (numOne / numTwo).toFixed(1);
 }
 
 let firstNumber = null;
@@ -88,7 +88,6 @@ equals.addEventListener('click', () => {
         operatorAction = null;
         display = result.toString();
         overallExpression = display; // Update overall expression.
-        operationInProgress.textContent = overallExpression;
     }
 });
 
@@ -127,13 +126,22 @@ allButtons.forEach((button) => {
 // Function to update the display when a number button is clicked
 function updateDisplay(newValue) {
     if (newValue === '.' && display.includes('.')) {
-        return; 
+        return;
     }
-    // Append the new value to the display
-    display += newValue;
-    overallExpression += newValue; // Update overall expression
+
+    if (newValue === '-' && display === '') {
+        // Handle negative numbers by adding a leading minus sign
+        display = '-';
+        overallExpression = '-';
+    } else {
+        // Append the new value to the display
+        display += newValue;
+        overallExpression += newValue; // Update overall expression
+    }
+
     operationInProgress.textContent = overallExpression;
 }
+
 
 // Add hover effect on buttons.
 allButtons.forEach((button) => {
@@ -160,7 +168,6 @@ document.addEventListener('keydown', (event) => {
             operatorAction = null;
             display = result.toString();
             overallExpression = display; // Update overall expression.
-            operationInProgress.textContent = overallExpression;
         }
     }
 
